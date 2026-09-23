@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 9 Post-Read · Functional Programming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stock:#E7E0CC; --stock-face:#FBF8EF; --ink:#2B2620; --ink-soft:#5B5347;
+    --tab-red:#A8382E; --tab-teal:#3E6E62; --tab-mustard:#B8842A; --line:#D8CFB4;
+    --good:#3E6E62; --bad:#A8382E; --shadow:3px 4px 0 rgba(43,38,32,0.14);
+  }
+  *{box-sizing:border-box;} html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--stock);background-image:radial-gradient(rgba(43,38,32,0.03) 1px,transparent 1px);background-size:14px 14px;color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;padding:0 0 80px;}
+  code,.mono{font-family:'IBM Plex Mono',monospace;}
+  h1,h2,h3,.tab-label{font-family:'Special Elite','IBM Plex Mono',monospace;font-weight:400;letter-spacing:.01em;}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+  header.masthead{padding:52px 20px 28px;max-width:720px;margin:0 auto;}
+  header.masthead .kicker{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft);margin:0 0 10px;}
+  header.masthead h1{font-size:2.1rem;margin:0 0 6px;line-height:1.25;}
+  header.masthead p.sub{color:var(--ink-soft);font-size:1.02rem;max-width:56ch;margin:0;}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin:22px 0 0;padding:14px 16px;background:var(--stock-face);border:1px solid var(--line);font-size:.86rem;color:var(--ink-soft);}
+  .legend span{white-space:nowrap;}
+  .scope{margin:34px auto 46px;max-width:720px;padding:20px 20px 20px 22px;background:var(--stock-face);border-left:5px solid var(--tab-red);box-shadow:var(--shadow);}
+  .scope h2{font-size:1rem;margin:0 0 8px;color:var(--tab-red);} .scope p{margin:0;color:var(--ink);}
+  .card{position:relative;max-width:720px;margin:0 auto 40px;background:var(--stock-face);border:1px solid var(--line);box-shadow:var(--shadow);}
+  .card-tab{position:absolute;top:-16px;left:24px;padding:5px 12px;color:#fff;font-size:.82rem;font-family:'IBM Plex Mono',monospace;box-shadow:2px 2px 0 rgba(43,38,32,.18);}
+  .card-body{padding:34px 26px 26px;} .card h3{font-size:1.28rem;margin:0 0 14px;} .card p{margin:0 0 14px;} .card p:last-child{margin-bottom:0;}
+  .analogy,.takeaway,.note{padding:14px 16px;margin:16px 0;font-size:.95rem;}
+  .analogy{background:#F2ECD8;border:1px dashed var(--tab-mustard);} .analogy .label,.takeaway .label,.note .label{font-weight:600;font-size:.8rem;font-family:'IBM Plex Mono',monospace;margin-bottom:4px;display:block;}
+  .analogy .label{color:var(--tab-mustard);} .takeaway{background:#EAF1EE;border-left:4px solid var(--tab-teal);} .takeaway .label{color:var(--tab-teal);}
+  .note{background:#F6E9E7;border-left:4px solid var(--tab-red);} .note .label{color:var(--tab-red);}
+  pre{background:#26221D;color:#EDE6D2;padding:14px 16px;overflow-x:auto;font-size:.88rem;margin:14px 0;line-height:1.5;} pre .out{color:#8FBBA9;}
+  details.predict{margin:16px 0;border:1px solid var(--line);background:#fff;}
+  details.predict summary{cursor:pointer;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:.88rem;color:var(--tab-teal);list-style:none;display:flex;align-items:center;gap:8px;}
+  details.predict summary::-webkit-details-marker{display:none;} details.predict summary::before{content:"▸";display:inline-block;transition:transform .15s ease;}
+  details.predict[open] summary::before{transform:rotate(90deg);} details.predict .reveal{padding:0 14px 16px;border-top:1px solid var(--line);padding-top:12px;}
+  .terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:8px;}
+  .flip{perspective:800px;height:110px;cursor:pointer;} .flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+  .flip.flipped .flip-inner{transform:rotateY(180deg);} .flip-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:.85rem;}
+  .flip-front{background:var(--stock-face);font-family:'IBM Plex Mono',monospace;font-weight:600;} .flip-back{background:var(--ink);color:var(--stock-face);transform:rotateY(180deg);font-size:.76rem;line-height:1.4;}
+  .qlist{margin:14px 0;padding-left:22px;} .qlist li{margin-bottom:8px;}
+  footer.endcap{max-width:720px;margin:20px auto 0;padding:18px 20px;text-align:center;color:var(--ink-soft);font-size:.84rem;}
+  @media(max-width:600px){header.masthead h1{font-size:1.6rem;}.card-body{padding:30px 18px 20px;}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="kicker">DSML · Post-Read · Class 9</p>
+  <h1>Functional Programming</h1>
+  <p class="sub">A card-by-card walkthrough to lock in what we covered — commit to a guess at each 🔮 before you tap to reveal, same as we did live.</p>
+  <div class="legend">
+    <span>🔮 predict before revealing</span>
+    <span>💬 debrief</span>
+    <span>🤖 AI moment</span>
+    <span>✅ takeaway</span>
+  </div>
+</header>
+
+<div class="scope">
+  <h2>What this post-read covers</h2>
+  <p>Higher-order functions; lambda functions; map(), filter(), and reduce(); lazy evaluation; chaining; functions that return functions; loop vs functional approaches; and a practical student-score mini project.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">01 · functional programming, the idea</div>
+    <div class="card-body">
+      <h3>A Different Vocabulary for Familiar Loop Patterns</h3>
+      
+<p>Think about the loops you've already written. Most of them do one of three things: transform every item, keep only some items, or combine everything into one answer.</p>
+<div class="analogy"><span class="label">💬 Analogy</span>Functional programming gives those familiar patterns named tools: <strong>map()</strong>, <strong>filter()</strong>, and <strong>reduce()</strong>.</div>
+<details class="predict">
+<summary>🔮 Predict before revealing — which tool matches each pattern?</summary>
+<div class="reveal">
+<p>Transform every item → <strong>map()</strong><br>Keep only selected items → <strong>filter()</strong><br>Combine everything into one value → <strong>reduce()</strong></p>
+</div>
+</details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>This class does not replace loops. It gives you a second vocabulary for patterns you already know.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">02 · lambda recap</div>
+    <div class="card-body">
+      <h3>The Small Function We Pass Around</h3>
+      
+<p>Lambda is a compact way to write a small, single-expression function.</p>
+<pre>def square(x):
+    return x * x
+
+square_lambda = lambda x: x * x
+
+print(square(5))
+print(square_lambda(5))
+
+<span class="out">25
+25</span></pre>
+<details class="predict">
+<summary>🔮 Predict before revealing — will both calls give the same result?</summary>
+<div class="reveal"><p>Yes. Both calculate <code>x * x</code>, so both print <strong>25</strong>.</p></div>
+</details>
+<div class="note"><span class="label">📌 Instructor note</span>Lambda is most useful here as a throwaway function passed directly to another function.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">03 · higher-order functions</div>
+    <div class="card-body">
+      <h3>A Function Can Take Another Function</h3>
+      
+<p>A function that takes another function as an argument, or returns a function, is called a <strong>higher-order function</strong>.</p>
+<pre>def apply_twice(func, value):
+    return func(func(value))
+
+def add_three(x):
+    return x + 3
+
+print(apply_twice(add_three, 10))
+
+<span class="out">16</span></pre>
+<details class="predict">
+<summary>🔮 Predict before revealing — trace it first</summary>
+<div class="reveal"><p><code>add_three(10)</code> gives 13. Then <code>add_three(13)</code> gives 16.</p></div>
+</details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>We pass <code>add_three</code>, not <code>add_three()</code>. The function itself is being passed so <code>apply_twice()</code> can call it.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">04 · map()</div>
+    <div class="card-body">
+      <h3>Transform Every Item</h3>
+      
+<p>Use <code>map()</code> when the same transformation should be applied to every item.</p>
+<pre>numbers = [1, 2, 3, 4]
+squared = map(lambda x: x ** 2, numbers)</pre>
+<div class="analogy"><span class="label">💬 Analogy</span>Imagine a conveyor belt: every item passes through the same machine and comes out transformed.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span><code>map(function, collection)</code> applies the function to each item.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">05 · map()</div>
+    <div class="card-body">
+      <h3>Why Doesn't print(squared) Show the Values?</h3>
+      
+<p>This is the most counterintuitive idea in the class. <code>map()</code> returns a map object rather than immediately creating a list.</p>
+<details class="predict">
+<summary>🔮 Predict before revealing — what will print(squared) show?</summary>
+<div class="reveal">
+<pre>numbers = [1, 2, 3, 4]
+squared = map(lambda x: x ** 2, numbers)
+print(squared)
+
+<span class="out">&lt;map object at 0x...&gt;</span></pre>
+<p>The exact address changes between runs. The important point is that it is a <strong>map object</strong>, not the final list.</p>
+<pre>print(list(squared))
+
+<span class="out">[1, 4, 9, 16]</span></pre>
+</div>
+</details>
+<div class="note"><span class="label">📌 Key idea</span><code>map()</code> is lazy. The values are produced when something consumes the iterator, such as <code>list()</code> or a <code>for</code> loop.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">06 · AI moment</div>
+    <div class="card-body">
+      <h3>Explain Lazy Evaluation — Then Verify It</h3>
+      
+<p>After making your prediction and seeing the actual output, ask AI:</p>
+<pre>I expected print(squared) to show the squared numbers, but it showed a map object instead. Walk me through why, step by step, and what “lazy evaluation” means here.</pre>
+<div class="note"><span class="label">🤖 Before using AI</span>Commit to your own explanation first. Then compare it with the AI explanation.</div>
+<div class="analogy"><span class="label">💬 Verify independently</span>Consume the same map object using <code>list(squared)</code> and a <code>for</code> loop. Confirm both produce values.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span>AI can explain why a rule applies to a specific example; the experiment makes the explanation concrete.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">07 · filter()</div>
+    <div class="card-body">
+      <h3>Select Some Items</h3>
+      
+<p>Where <code>map()</code> transforms every item, <code>filter()</code> keeps only items for which the condition is true.</p>
+<details class="predict">
+<summary>🔮 Predict before revealing — what will this produce?</summary>
+<div class="reveal">
+<pre>numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+evens = filter(lambda x: x % 2 == 0, numbers)
+print(list(evens))
+
+<span class="out">[2, 4, 6, 8]</span></pre>
+<p><code>filter()</code> is also lazy and returns a filter object.</p>
+</div>
+</details>
+<div class="takeaway"><span class="label">✅ Takeaway</span><code>map()</code> changes every item; <code>filter()</code> decides which items survive.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">08 · reduce()</div>
+    <div class="card-body">
+      <h3>Combine Everything Into One Value</h3>
+      
+<p><code>reduce()</code> repeatedly combines items until one final value remains.</p>
+<details class="predict">
+<summary>🔮 Predict before revealing — trace the running combination</summary>
+<div class="reveal">
+<pre>from functools import reduce
+
+numbers = [1, 2, 3, 4]
+total = reduce(lambda a, b: a + b, numbers)
+print(total)
+
+<span class="out">10</span></pre>
+<p>The combination is effectively <code>1 + 2 → 3</code>, then <code>3 + 3 → 6</code>, then <code>6 + 4 → 10</code>.</p>
+</div>
+</details>
+<div class="note"><span class="label">📌 Instructor note</span>Unlike <code>map()</code> and <code>filter()</code>, <code>reduce()</code> is not a built-in in Python 3. Import it from <code>functools</code>.</div>
+<pre>product = reduce(lambda a, b: a * b, numbers, 1)
+print(product)
+
+<span class="out">24</span></pre>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">09 · combining</div>
+    <div class="card-body">
+      <h3>Read Chained Calls From the Inside Out</h3>
+      
+<p><code>map()</code> and <code>filter()</code> are often chained together.</p>
+<details class="predict">
+<summary>🔮 Predict before revealing — which numbers survive first?</summary>
+<div class="reveal">
+<pre>numbers = [1,2,3,4,5,6,7,8,9,10]
+
+result = list(map(
+    lambda x: x ** 2,
+    filter(lambda x: x % 2 == 0, numbers)
+))
+
+print(result)
+
+<span class="out">[4, 16, 36, 64, 100]</span></pre>
+<p>First <code>filter()</code> keeps the even numbers. Then <code>map()</code> squares those values.</p>
+</div>
+</details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>For nested calls, read the execution order from the inside out.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">10 · anonymous functions</div>
+    <div class="card-body">
+      <h3>Why Lambdas Are Usually Written Inline</h3>
+      
+<p>In these examples, the lambda is not given a name because the logic is needed only once.</p>
+<pre># One-off logic
+list(map(lambda x: x ** 2, numbers))
+
+# Reusable logic
+def square(x):
+    return x ** 2</pre>
+<div class="analogy"><span class="label">💬 Rule of thumb</span>If you want to reuse the logic, or it needs more than one line, a regular <code>def</code> is usually clearer.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">11 · higher-order functions</div>
+    <div class="card-body">
+      <h3>A Function Can Return Another Function</h3>
+      
+<p>Higher-order functions can also return a function.</p>
+<details class="predict">
+<summary>🔮 Predict before revealing — what will double(5) and triple(5) print?</summary>
+<div class="reveal">
+<pre>def make_multiplier(n):
+    def multiplier(x):
+        return x * n
+    return multiplier
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+print(double(5))
+print(triple(5))
+
+<span class="out">10
+15</span></pre>
+<p><code>make_multiplier(2)</code> returns a new function that remembers <code>n = 2</code>. The same idea creates the function stored in <code>triple</code>.</p>
+</div>
+</details>
+<div class="note"><span class="label">📌 Instructor note</span>Do not go deep into closures or scoping rules here. The goal is simply to see that a function can return another function and that the returned function works afterward.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">12 · comparison</div>
+    <div class="card-body">
+      <h3>Loop vs Functional — Same Task, Different Style</h3>
+      
+<table>
+<tr><th>Task</th><th>Loop approach</th><th>Functional approach</th></tr>
+<tr><td>Transform every item</td><td><code>for</code> + <code>append()</code></td><td><code>map()</code></td></tr>
+<tr><td>Keep selected items</td><td><code>for</code> + <code>if</code> + <code>append()</code></td><td><code>filter()</code></td></tr>
+<tr><td>Combine into one value</td><td>Running total / accumulator</td><td><code>reduce()</code></td></tr>
+</table>
+<pre># Loop
+squared_loop = []
+for n in numbers:
+    squared_loop.append(n ** 2)
+
+# Functional
+squared_func = list(map(lambda n: n ** 2, numbers))</pre>
+<div class="takeaway"><span class="label">✅ Practical rule</span>Use map/filter/reduce for a single simple operation. Reach for a loop when you need step-by-step debugging, multiple branches, or more complex per-item logic.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">13 · AI moment</div>
+    <div class="card-body">
+      <h3>Use AI to Compare the Two Approaches</h3>
+      
+<p>First write one sentence explaining which version you personally find easier to read and why. Then ask:</p>
+<pre>Here is a loop version and a functional version of the same task. Are there situations where one is clearly better than the other, beyond personal taste?</pre>
+<div class="note"><span class="label">🤖 Verify</span>If AI says the functional version is harder to debug midway, insert a <code>print()</code> into both versions and compare them yourself.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span>AI can broaden the trade-offs you consider, but its claims should still be tested.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">14 · mini project</div>
+    <div class="card-body">
+      <h3>Processing Student Scores</h3>
+      
+<p>Combine <code>filter()</code>, <code>map()</code>, <code>reduce()</code>, lambdas, and the dictionaries from Class 8.</p>
+<pre>students = [
+    {"name": "Asha", "score": 92},
+    {"name": "Rahul", "score": 58},
+    {"name": "Priya", "score": 74},
+    {"name": "Karan", "score": 39},
+]
+
+passing = list(filter(lambda s: s["score"] >= 40, students))
+names = list(map(lambda s: s["name"], passing))
+
+from functools import reduce
+total = reduce(lambda acc, s: acc + s["score"], passing, 0)
+average = total / len(passing)
+
+print(names)
+print("Total:", total)
+print("Average:", round(average, 2))</pre>
+<details class="predict">
+<summary>🔮 Predict before revealing — who passes and what is the average?</summary>
+<div class="reveal">
+<pre><span class="out">['Asha', 'Rahul', 'Priya']
+Total: 224
+Average: 74.67</span></pre>
+</div>
+</details>
+<div class="takeaway"><span class="label">✅ What this combines</span><code>filter()</code> selects, <code>map()</code> extracts, <code>reduce()</code> combines, and dictionaries provide the structured records.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">15 · mental model</div>
+    <div class="card-body">
+      <h3>The Three-Question Decision Guide</h3>
+      
+<table>
+<tr><th>Ask yourself</th><th>Reach for</th></tr>
+<tr><td>Do I need to transform every item?</td><td><strong>map()</strong></td></tr>
+<tr><td>Do I need to keep only items meeting a condition?</td><td><strong>filter()</strong></td></tr>
+<tr><td>Do I need to combine many items into one result?</td><td><strong>reduce()</strong></td></tr>
+</table>
+<div class="analogy"><span class="label">💬 Memory hook</span><strong>MAP</strong> = change each one<br><strong>FILTER</strong> = choose some<br><strong>REDUCE</strong> = collapse to one</div>
+<div class="takeaway"><span class="label">✅ Remember</span><code>map()</code> and <code>filter()</code> return lazy iterators. <code>reduce()</code> comes from <code>functools</code>.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">16 · final recap</div>
+    <div class="card-body">
+      <h3>Build the Map Before You Memorize It</h3>
+      
+<p>Before reading the reference, write your own three-point recap of the class.</p>
+<details class="predict">
+<summary>🔮 Reveal the reference recap</summary>
+<div class="reveal">
+<ol class="qlist">
+<li>A higher-order function takes a function as an argument or returns a function.</li>
+<li><code>map()</code> transforms, <code>filter()</code> selects, and <code>reduce()</code> combines.</li>
+<li>Loops and functional solutions are both valid. The choice depends on clarity and task complexity.</li>
+</ol>
+</div>
+</details>
+<div class="takeaway"><span class="label">✅ Final takeaway</span>Functional programming is not a replacement for loops. It is another way to express three familiar patterns.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">17 · quick revision</div>
+    <div class="card-body">
+      <h3>Key Terms — Tap to Flip</h3>
+      
+<p class="small">Tap a card to reveal the meaning.</p>
+<div class="terms-grid" id="termsGrid"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="endcap">
+  Class 9 · Functional Programming — post-read
+</footer>
+
+<script>
+const terms=[{"term": "higher-order function", "def": "Takes a function as an argument or returns a function."}, {"term": "map()", "def": "Transforms every item and returns a lazy map object."}, {"term": "filter()", "def": "Keeps items whose condition is true and returns a lazy filter object."}, {"term": "reduce()", "def": "Combines items into one final value; imported from functools."}, {"term": "lambda", "def": "A compact anonymous function for small, often one-off logic."}, {"term": "lazy evaluation", "def": "Values are produced when an iterator is consumed."}, {"term": "iterator", "def": "An object that produces values one at a time when consumed."}, {"term": "chaining", "def": "Using the result of one operation as the input to another."}, {"term": "anonymous function", "def": "A function used without giving it a permanent name."}, {"term": "returned function", "def": "A function produced and returned by another function."}, {"term": "map vs filter", "def": "map changes every item; filter decides which items remain."}, {"term": "reduce accumulator", "def": "The running value that is combined with the next item."}];
+const grid=document.getElementById('termsGrid');
+terms.forEach(t=>{
+ const el=document.createElement('div');
+ el.className='flip';
+ el.innerHTML=`<div class="flip-inner"><div class="flip-face flip-front">${t.term}</div><div class="flip-face flip-back">${t.def}</div></div>`;
+ el.addEventListener('click',()=>el.classList.toggle('flipped'));
+ grid.appendChild(el);
+});
+</script>
+</body>
+</html>
